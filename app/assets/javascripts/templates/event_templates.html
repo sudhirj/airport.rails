@@ -1,0 +1,70 @@
+
+<script name="event">
+    <div class="event">        
+        <div class="avatar">
+            <img src="https://secure.gravatar.com/avatar/{{billboard.gravatar_id}}{{^billboard.gravatar_id}}f96170794b49cf5cc60c5efc69853e59{{/billboard.gravatar_id}}?d={{billboard.default_image}}"></img>
+        </div>            
+        <div class="copy">            
+            <a href="/{{actor.login}}">{{actor.login}}</a> {{{copy}}}
+            <div class="timestamp">{{timeAgo}}</div>
+        </div>
+
+    </div>    
+</script>
+
+<script name="event.repo.url">    
+    <a href="/{{repo.name}}">{{repo.name}}</a>
+</script>
+
+
+<script name="event.CreateEvent">    
+    created a new {{payload.ref_type}}{{#payload.ref}} ({{payload.ref}}){{/payload.ref}}{{#payload.object}}{{payload.object}} (<a href="/{{actor.login}}/{{payload.name}}">{{payload.name}}</a>){{/payload.object}}        
+</script>
+
+<script name="event.WatchEvent">    
+    {{payload.action}} watching {{> event.repo.url}}    
+</script>
+
+<script name="event.IssueCommentEvent">    
+    commented on issue <a href="{{issueUrl}}">#{{payload.issue.number}}</a> in {{> event.repo.url}}
+</script>
+
+<script name="event.IssuesEvent">    
+    {{payload.action}} issue <a href="{{issueUrl}}">#{{payload.issue.number}}</a> in {{> event.repo.url}}
+</script>
+
+<script name="event.PushEvent">    
+    pushed {{payload.size}} {{commitText}} to {{> event.repo.url}}
+</script>
+
+<script name="event.PullRequestEvent">    
+    {{payload.action}} pull request <a href="{{payload.pull_request.html_url}}">#{{payload.number}}</a> in {{> event.repo.url}}
+</script>
+
+<script name="event.ForkApplyEvent">    
+    applied a fork queue patch to {{> event.repo.url}}
+</script>
+
+<script name="event.GollumEvent">    
+    edited the wiki for {{> event.repo.url}}
+</script>
+
+<script name="event.ForkEvent">
+    forked <a href="/{{payload.forkee.name}}">{{payload.forkee.name}}</a> from {{> event.repo.url}}
+</script>
+
+<script name="event.PullRequestReviewCommentEvent">
+    commented on a pull request in {{> event.repo.url}}
+</script>
+
+<script name="event.FollowEvent">
+    started following <a href="/{{payload.target.login}}">{{payload.target.login}}</a>
+</script>
+
+<script name="event.GistEvent">    
+    {{payload.action}}d gist <a href="{{payload.gist.html_url}}">#{{payload.gist.id}}</a>    
+</script>
+
+<script name="event.CommitCommentEvent">   
+    commented on a commit in {{> event.repo.url}}
+</script>

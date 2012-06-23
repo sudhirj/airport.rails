@@ -1,0 +1,113 @@
+<script name="issue" >
+    <div class="issue">
+        <div class="head">
+            <a class="number" href="{{airportUrl}}">#{{number}}</a>
+            <span class="last-update">opened {{timeOpened}}</span>
+        </div>
+        
+        <div class="title">{{title}}</div>
+        <div class="info">{{#pull_request.html_url}}<a href="{{pull_request.html_url}}" title="Pull request attached"><i class="icon-upload-alt"></i></a>&nbsp;&nbsp;{{/pull_request.html_url}}&nbsp;{{comments}} <i class="icon-comments"></i></div>
+        <div class="issue-labels">
+        {{#labels}}
+        <div class="label" style="background: #{{color}}">{{name}}</div>
+        {{/labels}}
+        </div>
+    </div>    
+</script>
+
+<script name="issue.info">
+<div class="issue-info">
+    <a class="number" href="{{airportUrl}}">#{{number}}</a>
+    <div class="issue-user">
+        <img class="avatar" src="{{user.avatar_url}}"/>
+        <div class="info">
+            <a class="login" href="/{{user.login}}">{{user.login}}</a>
+            <span class="age">{{timeOpened}}</span>
+        </div>        
+    </div>
+    <div class="issue-labels">
+        {{#labels}}
+        <div class="label" style="background: #{{color}}">{{name}}</div>
+        {{/labels}}
+    </div>
+</div>
+<div class="sidebar"><a href="{{html_url}}" title="View #{{number}} on Github"><i class="mini-icon blacktocat"></i></a></div>
+</script>
+
+<script name="issue.summary">
+<div class="issue-summary">    
+    <h2 class="title">{{title}}</h2>
+    <div class="issue-body">{{{body_html}}}</div>
+</div>
+</script>
+
+<script name="issues" >
+    <div class="issue-list"></div>    
+</script>
+
+<script name="issues.comments" >
+    <div class="issue-comments"></div>    
+</script>
+
+<script name="issues.events" >
+    <div class="issue-events"></div>    
+</script>
+
+<script name="issues.events.subscribed" >
+    subscribed to this issue
+</script>
+
+<script name="issues.events.closed" >
+    closed this issue
+</script>
+
+<script name="issues.events.reopened" >
+    reopened this issue
+</script>
+
+<script name="issues.events.assigned" >
+    was assigned to this issue
+</script>
+
+<script name="issues.events.unsubscribed" >
+    unsubscribed from this issue
+</script>
+
+<script name="issues.events.mentioned" >
+    was mentioned
+</script>
+
+<script name="issues.events.referenced" >
+    referenced this issue in <span class="commit">{{shortCommit}}</span>
+</script>
+
+<script name="issues.events.merged" >
+    merged this issue in <span class="commit">{{shortCommit}}</span>
+</script>
+
+
+
+<script name="issues.comment" >
+    <div class="comment">
+        <div class="issue-body">{{{body_html}}}</div>
+        <div class="issue-user">
+            <img class="avatar" src="{{user.avatar_url}}"/>
+            <div class="info">
+                <a class="login" href="/{{user.login}}">{{user.login}}</a>
+                <span class="age">{{timeOpened}}</span>
+            </div>        
+        </div>
+    </div>    
+</script>
+
+<script name="issues.event" >
+    <div class="event">
+    <div class="issue-user">
+            <img class="avatar" src="{{actor.avatar_url}}"/>
+            <div class="info">
+                <a href="/{{actor.login}}">{{actor.login}}</a> {{{copy}}} <span class="age">{{timeOpened}}</span>            
+            </div>        
+        </div>        
+    </div>    
+</script>
+

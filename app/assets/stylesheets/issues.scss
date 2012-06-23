@@ -1,0 +1,197 @@
+.issue-list {    
+    a:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    .issue {      
+        position: relative;                     
+        border-radius: 0.381em;
+        margin-bottom: 0.618rem;
+        padding: 0.618rem;
+        border: thin solid rgba(0,0,0,0.1);
+        &:last-child {
+            margin-bottom: 0;
+        }
+        .number {                        
+            font-size: 1.381rem;
+            line-height: 1;
+            font-weight: 300;
+            margin-bottom: 0.2em;
+        }
+        .last-update{
+            @include grayout();
+        }
+        .title {            
+            font-weight: 500;
+            margin: 0.381em 0;      
+        }
+        .info {
+            position: absolute;
+            right: 0.618rem;
+            top: 0.381rem;
+            opacity: 0.8;
+            font-size: 1.1em;
+        }        
+        @include box-sizing(border-box);
+    }    
+}
+
+.issue-info {
+    .number {
+        font-size: 2.618em;
+        margin-top: 0;
+        line-height: 1;
+    }
+    .issue-labels {
+        margin: 1em 0;
+        .label {
+            margin: 0 0.381em 0.618em 0;
+        }
+    }    
+}
+
+.issue-summary {
+    .title {
+        font-size: 1.381rem;
+        line-height: 1.381;        
+        font-weight: 500;        
+        margin-bottom: 0.618rem;
+    }    
+}
+
+.issue-labels {
+    margin: 0;
+    .label {            
+        display: inline-block;
+        color: #fff;
+        font-size: 0.9em;            
+        font-weight: 500;
+        text-shadow: 0 0 0.618em rgba(0, 0, 0, 1);  
+        padding: 0.141em  0.41em ; 
+        margin-right: 0.235em;
+        border-radius: 0.381em;        
+        
+        @include single-box-shadow($inset: true, $blur: 0.618em, $color: rgba(0,0,0,0.381)); 
+        
+    }
+}
+
+.issue-user {
+    margin: 0.618em 0;
+    .avatar {
+        width: 2.618em;
+        float: left;
+        border-radius: 0.381em;
+        vertical-align: middle;
+    }
+    .info {
+        margin-left: 3.381em;
+        vertical-align: top;
+        line-height: 1;
+        .login {
+            display: inline-block;            
+            font-weight: 500;
+        }
+        .age {
+            @include grayout();
+            display: block;
+            margin-top: 0.381em;
+            line-height: 1.381;            
+        }
+    }
+}   
+
+.issue-body {
+    p {
+        margin: 0;
+        margin-bottom: 0.618em;
+    }
+    a {
+        font-weight: 500;
+        cursor: pointer;
+        &:hover{
+            text-decoration: underline;
+        }
+    }    
+    p > code, li > code {
+        background: $bg;
+        padding: 0.14em 0.381em 0.23em;
+        border-radius: 0.381em;
+    }
+    ul {
+        list-style: disc;        
+        margin-left: 1.618em;
+        margin-bottom: 0.618em;
+        li {
+            margin-bottom: 0.381em;
+        }
+    }
+    pre {
+        background: lighten($bg, 61);
+        padding: 0.618em;
+        overflow-x: auto;            
+        display: block;
+        border-radius: 0.618em;
+        @include single-box-shadow($inset: true, $blur: 1.618em, $color: rgba(0,0,0,0.06)); 
+        code {
+            width: auto;
+            white-space: pre;
+            display: inline-block;        
+            line-height: 1.381;    
+        }
+    }
+    blockquote {
+        font-style: italic;
+        border-left: thick solid $bg;
+        padding-left: 0.618em;
+        border-radius: 0.618em;
+        margin-left: 1.618em;
+    }
+    .email-hidden-toggle {
+        display: none;
+    }
+}
+
+.issue-comments {
+    .comment{
+        margin-bottom: 1em;
+        border-bottom: thick solid $bg;
+        padding-bottom: 1em;
+        .issue-user {
+            margin-top: 0.618em;
+        }
+        &:last-child{
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+    }
+}
+
+.issue-events {
+    .event {
+        .issue-user{
+            margin-top: 0;
+            margin-bottom: 0.618em;
+            .avatar {
+                width: 1.618em;
+                margin-top: 0.381em;
+            }
+            .info {
+                margin-left: 2.381em;
+                line-height: 1.381;
+                .commit {
+                    font-family: $codeFont;
+                    font-size: 1.05em;                    
+                }
+                a {
+                    font-weight: 500;
+                }
+                .age {
+                    line-height: 1.381;
+                    margin-top: 0;
+                }              
+            }
+        }
+    }
+}

@@ -1,0 +1,1 @@
+watchmedo shell-command --patterns="*.html" --ignore-directories --recursive --command="liz templates/*.html -o app/templates.js" templates 

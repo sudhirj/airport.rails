@@ -3,7 +3,7 @@ class HomeController < ApplicationController
   end
 
   def login
-    github_config = Airail::Application.config.github
+    github_config = Airport::Application.config.github
     github = Github.new client_id: github_config[:client_id], client_secret: github_config[:secret]
 
     unless params[:code]

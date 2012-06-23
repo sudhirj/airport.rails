@@ -7,6 +7,9 @@
 # Ignore bundler config
 /.bundle
 /bin
+*.DS_Store
+
+app/assets/javascripts/node_modules
 
 # Ignore the default SQLite database.
 /db/*.sqlite3

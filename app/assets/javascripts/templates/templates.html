@@ -1,0 +1,135 @@
+<script name="header.holder" >
+    <header>    
+        <div class="links"></div>        
+    </header>
+</script>
+
+<script name="header.links" >
+    
+    <a class="icon" href="/" title="Feedback">
+        <i class="icon-phone"></i>
+    </a>
+    <a class="icon" href="/" title="Settings">
+        <i class="icon-home"></i>
+    </a>
+    <a class="icon" href="/" title="Settings">
+        <i class="icon-inbox"></i>
+    </a>
+    {{^status}}
+    <a class="icon" href="/" title="Sign In">
+        <i class="icon-signin"></i>
+    </a>
+    {{/status}}
+    {{#status}}
+    <a class="icon" href="/" title="Logout">
+        <i class="icon-signout"></i>
+    </a>
+    {{/status}}
+
+</script>
+
+<script name="header.path" >
+    <ul class="path"></ul>
+</script>
+
+<script name="header.path.element" >
+    <li><a href="{{anchor}}">{{ name }}</a></li>
+</script>
+
+<script name="content.holder" >
+    <div id="main" class="app">
+        
+    </div>
+</script>
+
+<script name="user.info" >
+    <section class="user-info">
+        <img src="{{avatar}}"/>        
+        <div class="info">
+            <div class="name">{{name}}</div>
+            <div class="login"><a href="/{{login}}">{{login}}</a></div>            
+        </div>        
+    </section>    
+    <div class="sidebar"><a href="{{html_url}}" title="View {{login}} on Github"><i class="mini-icon blacktocat"></i></a></div>
+</script>
+
+<script name="repo.info" >
+    <div class="repo-info">                
+        <div class="name">{{name}}</div>        
+        {{#description}}<div class="desc">{{description}}</div>{{/description}}        
+        {{#parent}}<div class="fork-info">Forked from <a href="/{{parent.owner.login}}/{{parent.name}}">{{parent.owner.login}}/{{parent.name}}</a></div>{{/parent}}        
+    </div>        
+    <div class="sidebar"><a title="Open {{owner.login}}/{{name}} on Github" href="{{html_url}}"><i class="mini-icon blacktocat"></i></a></div>
+</script>
+
+
+<script name="repo.list.item" >
+    <a href="/{{owner}}/{{name}}">{{name}}<i class="icon-chevron-right"></i><i class="icon-chevron-right"></i></a>
+</script>
+
+
+<script name="repo.list" >
+    <div class="repo-list"></div>    
+</script>
+
+<script name="event.list" >
+    <ul class="event-list"></ul>    
+</script>
+
+<script name="control" >
+<div>
+    <div class="repo-info-holder"></div>
+    <div class="user-info-holder"></div>    
+    <div class="repo-list-holder"></div>    
+</div>
+</script>
+
+<script name="member" >
+<li>
+    <a href="/{{login}}" title="{{login}}">
+        <img src="{{avatar_url}}"/>        
+    </a>
+</li>    
+</script>
+
+<script name="members.list" >
+<ul class="member-tiles"></ul>
+</script>
+
+
+<script name="empty">
+    <div class="empty-message">{{message}}</div>
+</script>
+
+<script name="login.credentials">
+    <div class="loginbox">
+        <h2 class="header">Login via GitHub</h2>
+        <form method="post" action="/__login__">
+            <input type="checkbox" name="private" id="includePrivate"/>
+            <label for="includePrivate"><i class="mini-icon lock"></i> Include Private Repositories?</label>            
+            <button><i class="icon-signin"></i><span class="text">sign in</span></button>
+            <p>If you're concerned about granting access to your private repos (as you should be) please look at the <a href="/policy">privacy and security policy</a>.</p>
+        </form>
+        
+    </div>
+</script>
+
+<script name="login.info">
+    <div class="faq">
+        <div class="headline">
+            <div class="lead">(GitHub) Project Management</div>
+            <div class="for">for</div>
+            <div class="boom">Programmers</div>
+        </div>
+        
+        <h3 class="q">What is Airport?</h3>
+        <p class="a">Aiport is a <strong>project management and collaboration</strong> tool that's tied in to GitHub. Easily see what others have been up to, organize your issues on a wall, chat with your team, post attachements and more.</p>
+
+        <h3 class="q">How much does it cost?</h3>
+        <p class="a">Airport's pricing model is <s>blatantly copied from</s> inspired by GitHub: <strong>it's free for open source</strong> projects. For private repos you pay excatly what you're already paying GitHub to host them. If you choose to provide a private access token we'll peek at your GitHub plan and duplicate it here.</p>
+    </div>
+</script>
+
+<script name="chat">
+    <div class="empty-message">Campfire style team chat,<br/> Coming soon.</div>
+</script>

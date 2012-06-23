@@ -1,0 +1,17 @@
+{
+  "name":"airport",
+  "version":"1.0.0",
+  "main":"./app/app",
+  "directories":{
+    "lib":"./app"    
+  },
+  "dependencies":{
+    "underscore": "*",
+    "backbone": "*",
+    "hogan.js": "*",
+    "simply-deferred": "*",
+    "metroman": "*",
+    "underscore.string":"*",
+    "moment": "*"
+  }
+}

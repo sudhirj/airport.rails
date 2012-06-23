@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Airail::Application.load_tasks
+Airport::Application.load_tasks

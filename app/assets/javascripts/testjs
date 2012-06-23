@@ -1,0 +1,1 @@
+mocha tests/*.coffee -Gw --compilers coffee:coffee-script
