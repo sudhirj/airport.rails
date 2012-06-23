@@ -1,0 +1,34 @@
+
+# development:
+#     adapter:    postgresql
+#     encoding:   unicode
+#     pool:   5
+#     database:   d7luhhf8nh8hp3
+#     username:   rbjklxslhrhcxa
+#     password:   5iax5BaMyekhFeIdVToDOLVy-2
+#     host:   ec2-23-23-237-0.compute-1.amazonaws.com
+#     port:   5432
+
+development:
+  adapter: postgresql
+  database: airport_development  
+  host: localhost
+  username: sudhirjonathan
+  encoding: unicode
+  port: 5432
+  
+
+test:
+  adapter: postgresql
+  database: airport_test  
+  host: localhost
+  username: sudhirjonathan
+  encoding: unicode
+  port: 5432
+
+
+production:
+  adapter: sqlite3
+  database: db/production.sqlite3
+  pool: 5
+  timeout: 5000

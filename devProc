@@ -1,0 +1,2 @@
+spork: bin/spork
+autotest: bin/autotest
