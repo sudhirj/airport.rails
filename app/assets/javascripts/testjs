@@ -1,1 +1,4 @@
-mocha tests/*.coffee -Gw --compilers coffee:coffee-script
+#!/bin/bash
+BASEDIR=$(dirname $0)
+
+mocha $BASEDIR/tests/*.coffee -Gw --compilers coffee:coffee-script

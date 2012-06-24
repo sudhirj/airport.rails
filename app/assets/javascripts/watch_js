@@ -1,1 +1,4 @@
-watchmedo shell-command --patterns="*.*" --ignore-directories --recursive --command='browserify -o airport.js app/app.coffee' app
+#!/bin/bash
+BASEDIR=$(dirname $0)
+
+watchmedo shell-command --patterns="*.*" --ignore-directories --recursive --command="browserify -o ${BASEDIR}/airport.js ${BASEDIR}/app/app.coffee" $BASEDIR/app
