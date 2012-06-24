@@ -1,2 +1,4 @@
 spork: bin/spork
 autotest: bin/autotest
+js_compile: app/assets/javascripts/watch_js
+js_templates: app/assets/javascripts/watch_templates
