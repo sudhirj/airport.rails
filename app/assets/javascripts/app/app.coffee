@@ -20,6 +20,15 @@ _s = require 'underscore.string'
 deferred.installInto($)
 Backbone.setDomLibrary($)
 
+options = base.parseQueryString window.location.search
+
+if options.token and options.login
+    console.log 'Authenticated... setting options: ', options
+    localStorage.setItem 'token', options.token
+    localStorage.setItem 'login', options.login
+
+history.replaceState(null, null, window.location.pathname)
+
 bus = new base.Bus
 currentUser = new users.CurrentUser bus    
 currentRepo = new repos.CurrentRepo bus
@@ -31,7 +40,6 @@ currentActivities = new events.CurrentActivityList bus
 currentEvents = new events.CurrentEventList bus
 currentMembers = new users.CurrentOrgMemberList bus
 currentIssues = new issues.CurrentRepoIssueList bus
-
 
 headerView = new header.HeaderView bus
 
@@ -73,6 +81,7 @@ metroView = new dashboard.MetroView bus, {
 
 airportView = new base.AirportView(headerView, metroView)
 router = new routes.AirportRouter(bus)
+
 Backbone.history.start({pushState: true})
 
 $ -> 
@@ -85,5 +94,4 @@ $(window).on 'click', 'a', (event) ->
     isExternal = _s.startsWith(link, 'http')        
     if not isExternal then router.navigate link, trigger: true    
     return isExternal            
-
 

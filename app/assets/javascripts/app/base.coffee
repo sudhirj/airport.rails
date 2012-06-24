@@ -5,6 +5,15 @@ deferred = require 'simply-deferred'
 
 exports.log = log = -> console.log.apply console, arguments
 exports.airportize = airportize = (url) -> if url and url.trim() then url.replace('https://github.com', '') else ''
+exports.parseQueryString = (queryString) ->
+    cleanedString = queryString.trim('?').replace('?', '')
+    cleanedString.split('&').reduce (previous, current) ->
+        parts = current.split '='
+        previous[parts[0]] = parts[1]
+        previous
+    , {}
+    
+
 
 exports.BaseCollection = class BaseCollection extends Backbone.Collection
     constructor: ->

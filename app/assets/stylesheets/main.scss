@@ -222,7 +222,7 @@ hr {
         border-radius : 0.618em;
         @include transition-property('background,color');
         @include transition-duration(0.2s);
-        i {
+        i.arrow {
             &:first-child{
                 @include absolutize($right:2rem, $left:inherit, $top:25%, $bottom:inherit);
                 @include transition-property('right, opacity');
@@ -235,13 +235,13 @@ hr {
         &:hover{
             background: $bg;
             color: #444;
-            cursor: pointer;                        
-            i:first-child{
-                opacity: 1;
-                right: 1rem;                                
-            }
-            i{
+            cursor: pointer;                                    
+            i.arrow{
                 color: $light;
+                &:first-child{
+                    opacity: 1;
+                    right: 1rem;                                
+                }
             }
         }
     }

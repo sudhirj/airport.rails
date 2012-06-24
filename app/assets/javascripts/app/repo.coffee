@@ -56,6 +56,7 @@ exports.RepoListItemView = class RepoListItemView extends base.BaseView
         @setElement Hb.repo.list.item.render {
             name: @repo.get('name')
             owner: @repo.get('owner').login
+            private: @repo.get('private')
         }
 
 exports.RepoListView = class RepoListView extends base.BaseView

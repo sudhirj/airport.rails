@@ -15,6 +15,14 @@ describe 'URL Airportizer', ->
         assert.equal '', base.airportize undefined
         assert.equal '', base.airportize '  '
 
+describe 'Query string parser', ->
+    it 'should parser query strings', ->
+        hash = base.parseQueryString '?token=12345'
+        assert.equal hash.token, '12345'
+        hash = base.parseQueryString '?token=12345&debug=1'
+        assert.equal hash.token, '12345'
+        assert.equal hash.debug, '1'
+
 describe 'BaseModel', ->
     it 'should provide a loading promise based on external loads', ->
         externalLoader = new deferred.Deferred()
@@ -61,10 +69,4 @@ describe 'BaseCollection', ->
         assert.equal 'pending', eventChecker.state()
         collection.startLoading()
         assert.equal 'resolved', eventChecker.state()
-
-
-
-
-
-
 

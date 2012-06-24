@@ -1,4 +1,4 @@
-var require = function (file, cwd) {
+(function(){var require = function (file, cwd) {
     var resolved = require.resolve(file, cwd || '/');
     var mod = require.modules[resolved];
     if (!mod) throw new Error(
@@ -41,6 +41,7 @@ require.resolve = (function () {
         throw new Error("Cannot find module '" + x + "'");
         
         function loadAsFileSync (x) {
+            x = path.normalize(x);
             if (require.modules[x]) {
                 return x;
             }
@@ -53,7 +54,7 @@ require.resolve = (function () {
         
         function loadAsDirectorySync (x) {
             x = x.replace(/\/+$/, '');
-            var pkgfile = x + '/package.json';
+            var pkgfile = path.normalize(x + '/package.json');
             if (require.modules[pkgfile]) {
                 var pkg = require.modules[pkgfile]();
                 var b = pkg.browserify;
@@ -134,80 +135,48 @@ require.alias = function (from, to) {
     }
 };
 
-require.define = function (filename, fn) {
-    var dirname = require._core[filename]
-        ? ''
-        : require.modules.path().dirname(filename)
-    ;
+(function () {
+    var process = {};
     
-    var require_ = function (file) {
-        return require(file, dirname)
-    };
-    require_.resolve = function (name) {
-        return require.resolve(name, dirname);
-    };
-    require_.modules = require.modules;
-    require_.define = require.define;
-    var module_ = { exports : {} };
-    
-    require.modules[filename] = function () {
-        require.modules[filename]._cached = module_.exports;
-        fn.call(
-            module_.exports,
-            require_,
-            module_,
-            module_.exports,
-            dirname,
-            filename
-        );
-        require.modules[filename]._cached = module_.exports;
-        return module_.exports;
-    };
-};
-
-if (typeof process === 'undefined') process = {};
-
-if (!process.nextTick) process.nextTick = (function () {
-    var queue = [];
-    var canPost = typeof window !== 'undefined'
-        && window.postMessage && window.addEventListener
-    ;
-    
-    if (canPost) {
-        window.addEventListener('message', function (ev) {
-            if (ev.source === window && ev.data === 'browserify-tick') {
-                ev.stopPropagation();
-                if (queue.length > 0) {
-                    var fn = queue.shift();
-                    fn();
-                }
-            }
-        }, true);
-    }
-    
-    return function (fn) {
-        if (canPost) {
-            queue.push(fn);
-            window.postMessage('browserify-tick', '*');
+    require.define = function (filename, fn) {
+        if (require.modules.__browserify_process) {
+            process = require.modules.__browserify_process();
         }
-        else setTimeout(fn, 0);
+        
+        var dirname = require._core[filename]
+            ? ''
+            : require.modules.path().dirname(filename)
+        ;
+        
+        var require_ = function (file) {
+            return require(file, dirname)
+        };
+        require_.resolve = function (name) {
+            return require.resolve(name, dirname);
+        };
+        require_.modules = require.modules;
+        require_.define = require.define;
+        var module_ = { exports : {} };
+        
+        require.modules[filename] = function () {
+            require.modules[filename]._cached = module_.exports;
+            fn.call(
+                module_.exports,
+                require_,
+                module_,
+                module_.exports,
+                dirname,
+                filename,
+                process
+            );
+            require.modules[filename]._cached = module_.exports;
+            return module_.exports;
+        };
     };
 })();
 
-if (!process.title) process.title = 'browser';
 
-if (!process.binding) process.binding = function (name) {
-    if (name === 'evals') return require('vm')
-    else throw new Error('No such module')
-};
-
-if (!process.cwd) process.cwd = function () { return '.' };
-
-if (!process.env) process.env = {};
-if (!process.argv) process.argv = [];
-
-require.define("path", function (require, module, exports, __dirname, __filename) {
-function filter (xs, fn) {
+require.define("path",function(require,module,exports,__dirname,__filename,process){function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
         if (fn(xs[i], i, xs)) res.push(xs[i]);
@@ -341,11 +310,59 @@ exports.basename = function(path, ext) {
 exports.extname = function(path) {
   return splitPathRe.exec(path)[3] || '';
 };
-
 });
 
-require.define("/app/zepto.js", function (require, module, exports, __dirname, __filename) {
-/* Zepto v1.0rc1 - polyfill zepto event detect fx ajax form touch - zeptojs.com/license */
+require.define("__browserify_process",function(require,module,exports,__dirname,__filename,process){var process = module.exports = {};
+
+process.nextTick = (function () {
+    var queue = [];
+    var canPost = typeof window !== 'undefined'
+        && window.postMessage && window.addEventListener
+    ;
+    
+    if (canPost) {
+        window.addEventListener('message', function (ev) {
+            if (ev.source === window && ev.data === 'browserify-tick') {
+                ev.stopPropagation();
+                if (queue.length > 0) {
+                    var fn = queue.shift();
+                    fn();
+                }
+            }
+        }, true);
+    }
+    
+    return function (fn) {
+        if (canPost) {
+            queue.push(fn);
+            window.postMessage('browserify-tick', '*');
+        }
+        else setTimeout(fn, 0);
+    };
+})();
+
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+
+process.binding = function (name) {
+    if (name === 'evals') return (require)('vm')
+    else throw new Error('No such module. (Possibly not yet loaded)')
+};
+
+(function () {
+    var cwd = '/';
+    var path;
+    process.cwd = function () { return cwd };
+    process.chdir = function (dir) {
+        if (!path) path = require('path');
+        cwd = path.resolve(dir, cwd);
+    };
+})();
+});
+
+require.define("/app/zepto.js",function(require,module,exports,__dirname,__filename,process){/* Zepto v1.0rc1 - polyfill zepto event detect fx ajax form touch - zeptojs.com/license */
 ;(function(undefined){
   if (String.prototype.trim === undefined) // fix for iOS 3.2
     String.prototype.trim = function(){ return this.replace(/^\s+/, '').replace(/\s+$/, '') }
@@ -1699,11 +1716,9 @@ window.Zepto = Zepto
   ;['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap'].forEach(function(m){
     $.fn[m] = function(callback){ return this.bind(m, callback) }
   })
-})(Zepto);
-});
+})(Zepto);});
 
-require.define("/app/spin.js", function (require, module, exports, __dirname, __filename) {
-//fgnass.github.com/spin.js#v1.2.5
+require.define("/app/spin.js",function(require,module,exports,__dirname,__filename,process){//fgnass.github.com/spin.js#v1.2.5
 (function(window, document, undefined) {
 
 /**
@@ -2008,11 +2023,9 @@ require.define("/app/spin.js", function (require, module, exports, __dirname, __
 
   window.Spinner = Spinner;
 
-})(window, document);
-});
+})(window, document);});
 
-require.define("/app/base.coffee", function (require, module, exports, __dirname, __filename) {
-(function() {
+require.define("/app/base.coffee",function(require,module,exports,__dirname,__filename,process){(function() {
   var AirportView, Authentication, Backbone, BaseCollection, BaseModel, BaseView, Bus, Hb, airportize, deferred, log, _,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -2037,6 +2050,17 @@ require.define("/app/base.coffee", function (require, module, exports, __dirname
     } else {
       return '';
     }
+  };
+
+  exports.parseQueryString = function(queryString) {
+    var cleanedString;
+    cleanedString = queryString.trim('?').replace('?', '');
+    return cleanedString.split('&').reduce(function(previous, current) {
+      var parts;
+      parts = current.split('=');
+      previous[parts[0]] = parts[1];
+      return previous;
+    }, {});
   };
 
   exports.BaseCollection = BaseCollection = (function(_super) {
@@ -2289,11 +2313,9 @@ require.define("/app/base.coffee", function (require, module, exports, __dirname
   })(BaseModel);
 
 }).call(this);
-
 });
 
-require.define("/app/templates.js", function (require, module, exports, __dirname, __filename) {
-// AUTOGENERATED by liz.js on Sat Jun 23 2012 22:19:46 GMT+0530 (IST). DO NOT EDIT.
+require.define("/app/templates.js",function(require,module,exports,__dirname,__filename,process){// AUTOGENERATED by liz.js on Sun Jun 24 2012 18:08:29 GMT+0530 (IST). DO NOT EDIT.
 var hogan = require('hogan.js');
 exports.chat = (function(){var _t=new hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<div class=\"empty-message\">Campfire style team chat,<br/> Coming soon.</div>");return _.fl();;});return{_t:_t,render:function(){return _t.render.apply(_t,arguments)}};})();
 exports.content = {};
@@ -2347,18 +2369,14 @@ exports.members.list = (function(){var _t=new hogan.Template(function(c,p,i){var
 exports.repo = {};
 exports.repo.info = (function(){var _t=new hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<div class=\"repo-info\">                ");_.b("\n" + i);_.b("        <div class=\"name\">");_.b(_.v(_.f("name",c,p,0)));_.b("</div>        ");_.b("\n" + i);_.b("        ");if(_.s(_.f("description",c,p,1),c,p,0,113,152,"{{ }}")){_.rs(c,p,function(c,p,_){_.b("<div class=\"desc\">");_.b(_.v(_.f("description",c,p,0)));_.b("</div>");});c.pop();}_.b("        ");_.b("\n" + i);_.b("        ");if(_.s(_.f("parent",c,p,1),c,p,0,196,329,"{{ }}")){_.rs(c,p,function(c,p,_){_.b("<div class=\"fork-info\">Forked from <a href=\"/");_.b(_.v(_.d("parent.owner.login",c,p,0)));_.b("/");_.b(_.v(_.d("parent.name",c,p,0)));_.b("\">");_.b(_.v(_.d("parent.owner.login",c,p,0)));_.b("/");_.b(_.v(_.d("parent.name",c,p,0)));_.b("</a></div>");});c.pop();}_.b("        ");_.b("\n" + i);_.b("    </div>        ");_.b("\n" + i);_.b("    <div class=\"sidebar\"><a title=\"Open ");_.b(_.v(_.d("owner.login",c,p,0)));_.b("/");_.b(_.v(_.f("name",c,p,0)));_.b(" on Github\" href=\"");_.b(_.v(_.f("html_url",c,p,0)));_.b("\"><i class=\"mini-icon blacktocat\"></i></a></div>");return _.fl();;});return{_t:_t,render:function(){return _t.render.apply(_t,arguments)}};})();
 exports.repo.list = (function(){var _t=new hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<div class=\"repo-list\"></div>");return _.fl();;});return{_t:_t,render:function(){return _t.render.apply(_t,arguments)}};})();
-exports.repo.list.item = (function(){var _t=new hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<a href=\"/");_.b(_.v(_.f("owner",c,p,0)));_.b("/");_.b(_.v(_.f("name",c,p,0)));_.b("\">");_.b(_.v(_.f("name",c,p,0)));_.b("<i class=\"icon-chevron-right\"></i><i class=\"icon-chevron-right\"></i></a>");return _.fl();;});return{_t:_t,render:function(){return _t.render.apply(_t,arguments)}};})();
+exports.repo.list.item = (function(){var _t=new hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<a href=\"/");_.b(_.v(_.f("owner",c,p,0)));_.b("/");_.b(_.v(_.f("name",c,p,0)));_.b("\">");if(_.s(_.f("private",c,p,1),c,p,0,42,73,"{{ }}")){_.rs(c,p,function(c,p,_){_.b("<i class=\"mini-icon lock\"></i> ");});c.pop();}_.b(_.v(_.f("name",c,p,0)));_.b("<i class=\"icon-chevron-right arrow\"></i><i class=\"icon-chevron-right arrow\"></i></a>");return _.fl();;});return{_t:_t,render:function(){return _t.render.apply(_t,arguments)}};})();
 exports.user = {};
 exports.user.info = (function(){var _t=new hogan.Template(function(c,p,i){var _=this;_.b(i=i||"");_.b("<section class=\"user-info\">");_.b("\n" + i);_.b("        <img src=\"");_.b(_.v(_.f("avatar",c,p,0)));_.b("\"/>        ");_.b("\n" + i);_.b("        <div class=\"info\">");_.b("\n" + i);_.b("            <div class=\"name\">");_.b(_.v(_.f("name",c,p,0)));_.b("</div>");_.b("\n" + i);_.b("            <div class=\"login\"><a href=\"/");_.b(_.v(_.f("login",c,p,0)));_.b("\">");_.b(_.v(_.f("login",c,p,0)));_.b("</a></div>            ");_.b("\n" + i);_.b("        </div>        ");_.b("\n" + i);_.b("    </section>    ");_.b("\n" + i);_.b("    <div class=\"sidebar\"><a href=\"");_.b(_.v(_.f("html_url",c,p,0)));_.b("\" title=\"View ");_.b(_.v(_.f("login",c,p,0)));_.b(" on Github\"><i class=\"mini-icon blacktocat\"></i></a></div>");return _.fl();;});return{_t:_t,render:function(){return _t.render.apply(_t,arguments)}};})();
-
 });
 
-require.define("/node_modules/hogan.js/package.json", function (require, module, exports, __dirname, __filename) {
-module.exports = {"main":"./lib/hogan.js"}
-});
+require.define("/node_modules/hogan.js/package.json",function(require,module,exports,__dirname,__filename,process){module.exports = {"main":"./lib/hogan.js"}});
 
-require.define("/node_modules/hogan.js/lib/hogan.js", function (require, module, exports, __dirname, __filename) {
-/*
+require.define("/node_modules/hogan.js/lib/hogan.js",function(require,module,exports,__dirname,__filename,process){/*
  *  Copyright 2011 Twitter, Inc.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -2377,11 +2395,9 @@ require.define("/node_modules/hogan.js/lib/hogan.js", function (require, module,
 
 var Hogan = require('./compiler');
 Hogan.Template = require('./template').Template;
-module.exports = Hogan; 
-});
+module.exports = Hogan; });
 
-require.define("/node_modules/hogan.js/lib/compiler.js", function (require, module, exports, __dirname, __filename) {
-/*
+require.define("/node_modules/hogan.js/lib/compiler.js",function(require,module,exports,__dirname,__filename,process){/*
  *  Copyright 2011 Twitter, Inc.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -2725,11 +2741,9 @@ require.define("/node_modules/hogan.js/lib/compiler.js", function (require, modu
     return this.cache[key] = t;
   };
 })(typeof exports !== 'undefined' ? exports : Hogan);
-
 });
 
-require.define("/node_modules/hogan.js/lib/template.js", function (require, module, exports, __dirname, __filename) {
-/*
+require.define("/node_modules/hogan.js/lib/template.js",function(require,module,exports,__dirname,__filename,process){/*
  *  Copyright 2011 Twitter, Inc.
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -2970,15 +2984,11 @@ var Hogan = {};
 
 })(typeof exports !== 'undefined' ? exports : Hogan);
 
-
 });
 
-require.define("/node_modules/underscore/package.json", function (require, module, exports, __dirname, __filename) {
-module.exports = {"main":"underscore.js"}
-});
+require.define("/node_modules/underscore/package.json",function(require,module,exports,__dirname,__filename,process){module.exports = {"main":"underscore.js"}});
 
-require.define("/node_modules/underscore/underscore.js", function (require, module, exports, __dirname, __filename) {
-//     Underscore.js 1.3.3
+require.define("/node_modules/underscore/underscore.js",function(require,module,exports,__dirname,__filename,process){//     Underscore.js 1.3.3
 //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
 //     Underscore is freely distributable under the MIT license.
 //     Portions of Underscore are inspired or borrowed from Prototype,
@@ -4037,15 +4047,11 @@ require.define("/node_modules/underscore/underscore.js", function (require, modu
   };
 
 }).call(this);
-
 });
 
-require.define("/node_modules/backbone/package.json", function (require, module, exports, __dirname, __filename) {
-module.exports = {"main":"backbone.js"}
-});
+require.define("/node_modules/backbone/package.json",function(require,module,exports,__dirname,__filename,process){module.exports = {"main":"backbone.js"}});
 
-require.define("/node_modules/backbone/backbone.js", function (require, module, exports, __dirname, __filename) {
-//     Backbone.js 0.9.2
+require.define("/node_modules/backbone/backbone.js",function(require,module,exports,__dirname,__filename,process){//     Backbone.js 0.9.2
 
 //     (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.
 //     Backbone may be freely distributed under the MIT license.
@@ -5476,15 +5482,11 @@ require.define("/node_modules/backbone/backbone.js", function (require, module, 
   };
 
 }).call(this);
-
 });
 
-require.define("/node_modules/backbone/node_modules/underscore/package.json", function (require, module, exports, __dirname, __filename) {
-module.exports = {"main":"underscore.js"}
-});
+require.define("/node_modules/backbone/node_modules/underscore/package.json",function(require,module,exports,__dirname,__filename,process){module.exports = {"main":"underscore.js"}});
 
-require.define("/node_modules/backbone/node_modules/underscore/underscore.js", function (require, module, exports, __dirname, __filename) {
-//     Underscore.js 1.3.3
+require.define("/node_modules/backbone/node_modules/underscore/underscore.js",function(require,module,exports,__dirname,__filename,process){//     Underscore.js 1.3.3
 //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
 //     Underscore is freely distributable under the MIT license.
 //     Portions of Underscore are inspired or borrowed from Prototype,
@@ -6543,15 +6545,11 @@ require.define("/node_modules/backbone/node_modules/underscore/underscore.js", f
   };
 
 }).call(this);
-
 });
 
-require.define("/node_modules/simply-deferred/package.json", function (require, module, exports, __dirname, __filename) {
-module.exports = {"main":"./deferred"}
-});
+require.define("/node_modules/simply-deferred/package.json",function(require,module,exports,__dirname,__filename,process){module.exports = {"main":"./deferred"}});
 
-require.define("/node_modules/simply-deferred/deferred.js", function (require, module, exports, __dirname, __filename) {
-// Generated by CoffeeScript 1.3.1
+require.define("/node_modules/simply-deferred/deferred.js",function(require,module,exports,__dirname,__filename,process){// Generated by CoffeeScript 1.3.1
 /*
 Simply Deferred - v.1.1.4
 (c) 2012 Sudhir Jonathan, contact.me@sudhirjonathan.com, MIT Licensed.
@@ -6725,11 +6723,9 @@ if (typeof exports !== 'undefined') {
   this.Deferred.when = _when;
   this.Deferred.installInto = installInto;
 }
-
 });
 
-require.define("/app/users.coffee", function (require, module, exports, __dirname, __filename) {
-(function() {
+require.define("/app/users.coffee",function(require,module,exports,__dirname,__filename,process){(function() {
   var CurrentOrgMemberList, CurrentUser, Hb, MemberView, MembersView, User, UserInfoView, UserList, base, github,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -6898,12 +6894,10 @@ require.define("/app/users.coffee", function (require, module, exports, __dirnam
   })(base.BaseView);
 
 }).call(this);
-
 });
 
-require.define("/app/github.coffee", function (require, module, exports, __dirname, __filename) {
-(function() {
-  var GITHUB_API_ENPOINT, auth, githubRequest, jsonRequest, repoEvents, userEvents, _;
+require.define("/app/github.coffee",function(require,module,exports,__dirname,__filename,process){(function() {
+  var GITHUB_API_ENPOINT, auth, getLogin, getToken, githubRequest, isCurrentUser, isLoggedIn, jsonRequest, repoEvents, userEvents, _;
 
   _ = require('underscore');
 
@@ -6911,21 +6905,51 @@ require.define("/app/github.coffee", function (require, module, exports, __dirna
 
   auth = {};
 
+  getLogin = function() {
+    return localStorage.getItem('login');
+  };
+
+  getToken = function() {
+    return localStorage.getItem('token');
+  };
+
+  isLoggedIn = function() {
+    return !!(getToken() && getToken());
+  };
+
+  isCurrentUser = function(login) {
+    return isLoggedIn() && (login === getLogin());
+  };
+
   exports.setAuth = function(newAuth) {
     return auth = newAuth;
   };
 
   jsonRequest = function(opts) {
-    return $.ajax(_.defaults(opts, {
-      type: 'GET',
-      dataType: 'json',
-      headers: {
-        'Accept': 'application/vnd.github.full+json, application/json'
-      }
-    }));
+    var _base, _ref, _ref1, _ref2, _ref3;
+    if ((_ref = opts.type) == null) {
+      opts.type = 'GET';
+    }
+    if ((_ref1 = opts.dataType) == null) {
+      opts.dataType = 'json';
+    }
+    if ((_ref2 = opts.headers) == null) {
+      opts.headers = {};
+    }
+    if ((_ref3 = (_base = opts.headers)['Accept']) == null) {
+      _base['Accept'] = 'application/vnd.github.full+json, application/json';
+    }
+    return $.ajax(opts);
   };
 
   githubRequest = function(opts) {
+    var _ref;
+    if (isLoggedIn()) {
+      if ((_ref = opts.data) == null) {
+        opts.data = {};
+      }
+      opts.data.access_token = getToken();
+    }
     opts.url = "" + GITHUB_API_ENPOINT + opts.url;
     return jsonRequest(opts);
   };
@@ -6962,7 +6986,11 @@ require.define("/app/github.coffee", function (require, module, exports, __dirna
 
   exports.repos = function(user) {
     return githubRequest({
-      url: "/users/" + user + "/repos"
+      url: (isCurrentUser(user) ? "/user/repos" : "/users/" + user + "/repos"),
+      data: {
+        sort: 'updated',
+        direction: 'desc'
+      }
     });
   };
 
@@ -7001,11 +7029,9 @@ require.define("/app/github.coffee", function (require, module, exports, __dirna
   };
 
 }).call(this);
-
 });
 
-require.define("/app/repo.coffee", function (require, module, exports, __dirname, __filename) {
-(function() {
+require.define("/app/repo.coffee",function(require,module,exports,__dirname,__filename,process){(function() {
   var CurrentRepo, CurrentUserRepoList, Hb, Repo, RepoInfoView, RepoListItemView, RepoListView, base, github, _,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -7127,7 +7153,8 @@ require.define("/app/repo.coffee", function (require, module, exports, __dirname
     RepoListItemView.prototype._render = function() {
       return this.setElement(Hb.repo.list.item.render({
         name: this.repo.get('name'),
-        owner: this.repo.get('owner').login
+        owner: this.repo.get('owner').login,
+        "private": this.repo.get('private')
       }));
     };
 
@@ -7158,11 +7185,9 @@ require.define("/app/repo.coffee", function (require, module, exports, __dirname
   })(base.BaseView);
 
 }).call(this);
-
 });
 
-require.define("/app/events.coffee", function (require, module, exports, __dirname, __filename) {
-(function() {
+require.define("/app/events.coffee",function(require,module,exports,__dirname,__filename,process){(function() {
   var CurrentActivityList, CurrentEventList, Event, EventList, EventListView, EventView, Hb, base, default_images, github, moment, _,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
@@ -7359,15 +7384,11 @@ require.define("/app/events.coffee", function (require, module, exports, __dirna
   })(base.BaseView);
 
 }).call(this);
-
 });
 
-require.define("/node_modules/moment/package.json", function (require, module, exports, __dirname, __filename) {
-module.exports = {"main":"./moment.js"}
-});
+require.define("/node_modules/moment/package.json",function(require,module,exports,__dirname,__filename,process){module.exports = {"main":"./moment.js"}});
 
-require.define("/node_modules/moment/moment.js", function (require, module, exports, __dirname, __filename) {
-// moment.js
+require.define("/node_modules/moment/moment.js",function(require,module,exports,__dirname,__filename,process){// moment.js
 // version : 1.6.2
 // author : Tim Wood
 // license : MIT
@@ -8285,11 +8306,9 @@ require.define("/node_modules/moment/moment.js", function (require, module, expo
         });
     }
 })(Date);
-
 });
 
-require.define("/app/issues.coffee", function (require, module, exports, __dirname, __filename) {
-(function() {
+require.define("/app/issues.coffee",function(require,module,exports,__dirname,__filename,process){(function() {
   var CommentView, CurrentIssue, CurrentIssueComments, CurrentIssueEvents, CurrentRepoIssueList, EventView, Hb, Issue, IssueComment, IssueCommentsView, IssueEvent, IssueEventsView, IssueInfoView, IssueListView, IssueSummaryView, IssueView, base, github, moment, _,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
@@ -8627,11 +8646,9 @@ require.define("/app/issues.coffee", function (require, module, exports, __dirna
   })(base.BaseView);
 
 }).call(this);
-
 });
 
-require.define("/app/header.coffee", function (require, module, exports, __dirname, __filename) {
-(function() {
+require.define("/app/header.coffee",function(require,module,exports,__dirname,__filename,process){(function() {
   var Hb, HeaderPathElementView, HeaderPathView, HeaderView, base,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
@@ -8753,11 +8770,9 @@ require.define("/app/header.coffee", function (require, module, exports, __dirna
   })(base.BaseView);
 
 }).call(this);
-
 });
 
-require.define("/app/chat.coffee", function (require, module, exports, __dirname, __filename) {
-(function() {
+require.define("/app/chat.coffee",function(require,module,exports,__dirname,__filename,process){(function() {
   var ChatView, base, templates,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -8780,11 +8795,9 @@ require.define("/app/chat.coffee", function (require, module, exports, __dirname
   })(base.BaseView);
 
 }).call(this);
-
 });
 
-require.define("/app/dashboard.coffee", function (require, module, exports, __dirname, __filename) {
-(function() {
+require.define("/app/dashboard.coffee",function(require,module,exports,__dirname,__filename,process){(function() {
   var Hb, MetroView, base, metroman, _,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -9043,15 +9056,11 @@ require.define("/app/dashboard.coffee", function (require, module, exports, __di
   })(base.BaseView);
 
 }).call(this);
-
 });
 
-require.define("/node_modules/metroman/package.json", function (require, module, exports, __dirname, __filename) {
-module.exports = {"main":"./metroman"}
-});
+require.define("/node_modules/metroman/package.json",function(require,module,exports,__dirname,__filename,process){module.exports = {"main":"./metroman"}});
 
-require.define("/node_modules/metroman/metroman.js", function (require, module, exports, __dirname, __filename) {
-// Generated by CoffeeScript 1.3.1
+require.define("/node_modules/metroman/metroman.js",function(require,module,exports,__dirname,__filename,process){// Generated by CoffeeScript 1.3.1
 var MetroMan, p;
 
 p = function(o) {
@@ -9102,11 +9111,9 @@ if (typeof exports !== 'undefined') {
 } else {
   this.MetroMan = MetroMan;
 }
-
 });
 
-require.define("/app/routes.coffee", function (require, module, exports, __dirname, __filename) {
-(function() {
+require.define("/app/routes.coffee",function(require,module,exports,__dirname,__filename,process){(function() {
   var AirportRouter, Backbone,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
@@ -9174,11 +9181,9 @@ require.define("/app/routes.coffee", function (require, module, exports, __dirna
   })(Backbone.Router);
 
 }).call(this);
-
 });
 
-require.define("/app/login.coffee", function (require, module, exports, __dirname, __filename) {
-(function() {
+require.define("/app/login.coffee",function(require,module,exports,__dirname,__filename,process){(function() {
   var Hb, LoginInfoView, LoginView, base,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -9214,15 +9219,11 @@ require.define("/app/login.coffee", function (require, module, exports, __dirnam
   })(base.BaseView);
 
 }).call(this);
-
 });
 
-require.define("/node_modules/underscore.string/package.json", function (require, module, exports, __dirname, __filename) {
-module.exports = {"main":"./lib/underscore.string"}
-});
+require.define("/node_modules/underscore.string/package.json",function(require,module,exports,__dirname,__filename,process){module.exports = {"main":"./lib/underscore.string"}});
 
-require.define("/node_modules/underscore.string/lib/underscore.string.js", function (require, module, exports, __dirname, __filename) {
-// Underscore.string
+require.define("/node_modules/underscore.string/lib/underscore.string.js",function(require,module,exports,__dirname,__filename,process){// Underscore.string
 // (c) 2010 Esa-Matti Suuronen <esa-matti aet suuronen dot org>
 // Underscore.strings is freely distributable under the terms of the MIT license.
 // Documentation: https://github.com/epeli/underscore.string
@@ -9747,12 +9748,10 @@ require.define("/node_modules/underscore.string/lib/underscore.string.js", funct
   }
 
 }(this || window));
-
 });
 
-require.define("/app/app.coffee", function (require, module, exports, __dirname, __filename) {
-    (function() {
-  var Backbone, activitiesView, airportView, base, bus, chat, chatView, currentActivities, currentEvents, currentIssue, currentIssueComments, currentIssueEvents, currentIssues, currentMembers, currentRepo, currentRepoList, currentUser, dashboard, deferred, events, eventsView, github, header, headerView, hogan, issueCommentsView, issueEventsView, issueInfoView, issueListView, issueSummaryView, issues, login, loginInfoView, loginView, membersView, metroView, repoInfoView, repoListView, repos, router, routes, userInfoView, users, _s;
+require.define("/app/app.coffee",function(require,module,exports,__dirname,__filename,process){(function() {
+  var Backbone, activitiesView, airportView, base, bus, chat, chatView, currentActivities, currentEvents, currentIssue, currentIssueComments, currentIssueEvents, currentIssues, currentMembers, currentRepo, currentRepoList, currentUser, dashboard, deferred, events, eventsView, github, header, headerView, hogan, issueCommentsView, issueEventsView, issueInfoView, issueListView, issueSummaryView, issues, login, loginInfoView, loginView, membersView, metroView, options, repoInfoView, repoListView, repos, router, routes, userInfoView, users, _s;
 
   require('./zepto');
 
@@ -9791,6 +9790,16 @@ require.define("/app/app.coffee", function (require, module, exports, __dirname,
   deferred.installInto($);
 
   Backbone.setDomLibrary($);
+
+  options = base.parseQueryString(window.location.search);
+
+  if (options.token && options.login) {
+    console.log('Authenticated... setting options: ', options);
+    localStorage.setItem('token', options.token);
+    localStorage.setItem('login', options.login);
+  }
+
+  history.replaceState(null, null, window.location.pathname);
 
   bus = new base.Bus;
 
@@ -9888,6 +9897,6 @@ require.define("/app/app.coffee", function (require, module, exports, __dirname,
   });
 
 }).call(this);
-
 });
 require("/app/app.coffee");
+})();
