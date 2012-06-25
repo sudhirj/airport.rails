@@ -6921,10 +6921,6 @@ require.define("/app/github.coffee",function(require,module,exports,__dirname,__
     return isLoggedIn() && (login === getLogin());
   };
 
-  exports.setAuth = function(newAuth) {
-    return auth = newAuth;
-  };
-
   jsonRequest = function(opts) {
     var _base, _ref, _ref1, _ref2, _ref3;
     if ((_ref = opts.type) == null) {

@@ -8,9 +8,6 @@ getToken = -> localStorage.getItem('token')
 isLoggedIn = -> !!(getToken() and getToken())
 isCurrentUser = (login) -> isLoggedIn() and (login is getLogin())
 
-exports.setAuth = (newAuth) ->
-    auth = newAuth
-
 jsonRequest = (opts) ->
     opts.type ?= 'GET'
     opts.dataType ?= 'json'
