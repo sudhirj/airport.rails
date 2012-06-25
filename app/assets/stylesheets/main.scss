@@ -133,7 +133,7 @@ header {
         @include box-sizing(border-box);
         @include single-box-shadow($inset: true, $blur: 0.618em, $color: rgba(0,0,0,0.1));
         background: rgba(255,255,255,0.381);
-        overflow: auto;
+        overflow: auto;        
         -webkit-overflow-scrolling: touch;
         padding:1rem;        
     }
@@ -405,3 +405,20 @@ hr {
 }
 
 @import "issues";
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.1); 
+    border-radius: 5px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.3); 
+}
+::-webkit-scrollbar-corner {
+    display: none;
+}
