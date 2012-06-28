@@ -20,8 +20,6 @@ Airport::Application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
 
-  config.middleware.insert_after('Rack::Cache', Rack::Deflater)
-
   # Defaults to nil and saved in location specified by config.assets.prefix
   # config.assets.manifest = YOUR_PATH
 
