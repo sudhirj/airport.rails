@@ -64,7 +64,10 @@ module Airport
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
-    config.github = {client_id: 'c35201378d60539a5910', secret: 'fa20bf6f1941eeea76a2939564e12a35578b989e'}
+    config.github = {
+        client_id: ENV['GITHUB_CLIENT'] || 'c35201378d60539a5910', 
+        secret: ENV['GITHUB_SECRET'] || 'fa20bf6f1941eeea76a2939564e12a35578b989e'
+    }
     
   end
 end
