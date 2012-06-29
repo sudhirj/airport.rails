@@ -18,7 +18,7 @@ exports.HeaderPathView = class HeaderPathView extends base.BaseView
             new HeaderPathElementView('airport', '/')            
         ]        
 
-        @bus.on 'show:home', (user) => @renderPath()
+        @bus.on 'show:home show:login', (user) => @renderPath()
         @bus.on 'show:user', (user) => @renderPath user
         @bus.on 'show:repo', (repo) => @renderPath repo.owner, repo.name
         @bus.on 'show:issue', (issue) => @renderPath issue.owner, issue.name, 'issues', issue.number

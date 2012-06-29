@@ -16,16 +16,16 @@ github = require './github'
 login = require './login'
 deferred = require 'simply-deferred'
 _s = require 'underscore.string'
+auth = require './auth'
 
 deferred.installInto($)
 Backbone.setDomLibrary($)
 
 options = base.parseQueryString window.location.search
-
-if options.token and options.login
-    console.log 'Authenticated... setting options: ', options
-    localStorage.setItem 'token', options.token
-    localStorage.setItem 'login', options.login
+if options.token and options.login then auth.set(options)
+    
+console.log 'Using token:', auth.getToken()
+console.log 'Using current user:', auth.getLogin()
 
 history.replaceState(null, null, window.location.pathname)
 

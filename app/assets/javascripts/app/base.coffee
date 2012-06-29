@@ -5,6 +5,7 @@ deferred = require 'simply-deferred'
 
 exports.log = log = -> console.log.apply console, arguments
 exports.airportize = airportize = (url) -> if url and url.trim() then url.replace('https://github.com', '') else ''
+
 exports.parseQueryString = (queryString) ->
     cleanedString = queryString.trim('?').replace('?', '')
     cleanedString.split('&').reduce (previous, current) ->
@@ -12,8 +13,6 @@ exports.parseQueryString = (queryString) ->
         previous[parts[0]] = parts[1]
         previous
     , {}
-    
-
 
 exports.BaseCollection = class BaseCollection extends Backbone.Collection
     constructor: ->
@@ -114,7 +113,7 @@ exports.Bus = class Bus
     on: (event, handler) -> @bus.on(event, handler)
 
     trigger: (event, args...) ->
-        log 'trigger', arguments
+        log 'Trigger', arguments
         @bus.trigger event, args...
 
     done: (promise, handler) ->

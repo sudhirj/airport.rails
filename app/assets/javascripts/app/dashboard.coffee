@@ -46,7 +46,7 @@ exports.MetroView = class MetroView extends base.BaseView
                     { view: @views.chat.$el, height: 4, width: 2, position: { x: 2, y: 3} }
                 ]
 
-            'show:home':
+            'show:login':
                 grid: { rows: 7, columns: 7, margin: 1.618 }
                 elements: [
                     { view: @views.loginInfo.$el, height: 5, width: 3, position: { x:1, y: 1 }}
@@ -54,9 +54,7 @@ exports.MetroView = class MetroView extends base.BaseView
                 ]
 
         _.each _.keys(configs), (key) =>
-            @bus.on key, =>
-                @bus.done 'global:render', =>                    
-                    @metroman.load configs[key]
+            @bus.on key, => @bus.done 'global:render', => @metroman.load configs[key]
 
         super
 

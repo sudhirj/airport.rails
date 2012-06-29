@@ -21,6 +21,6 @@ exports.AirportRouter = class AirportRouter extends Backbone.Router
 
     home: =>
         @navigate "/", {replace: true}
-        @bus.trigger 'show:home'
+        @bus.trigger 'show:login'
 
 
