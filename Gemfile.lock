@@ -89,6 +89,7 @@ GEM
       httpauth (~> 0.1)
       multi_json (~> 1.0)
       rack (~> 1.4)
+    oj (1.2.11)
     pg (0.13.2)
     polyglot (0.3.3)
     pry (0.9.9.6)
@@ -174,6 +175,7 @@ DEPENDENCIES
   foreman
   github_api
   jbuilder
+  oj
   pg
   pry
   rails (~> 3.2)

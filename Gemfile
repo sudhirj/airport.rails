@@ -7,6 +7,7 @@ gem 'jbuilder'
 gem 'github_api'
 
 gem 'pg'
+gem 'oj'
 gem 'unicorn'
 
 group :development, :test do
