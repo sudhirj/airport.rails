@@ -7,6 +7,6 @@ exports.set = set = (options) ->
 
 exports.getLogin = getLogin = -> localStorage.getItem('login')
 exports.getToken = getToken = -> localStorage.getItem('token')
-exports.isLoggedIn = isLoggedIn = -> !!(getToken() and getToken())
+exports.isLoggedIn = isLoggedIn = -> !!(getToken() and getLogin())
 exports.isCurrentUser = isCurrentUser = (login) -> isLoggedIn() and (login is getLogin())
 

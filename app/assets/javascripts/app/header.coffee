@@ -9,8 +9,6 @@ exports.HeaderPathElementView = class HeaderPathElementView extends base.BaseVie
         @rendering.done =>
             @setElement(Hb.header.path.element.render(name: @text, anchor: @anchor))
         
-
-
 exports.HeaderPathView = class HeaderPathView extends base.BaseView    
     constructor: (@bus) ->        
         super
@@ -47,8 +45,6 @@ exports.HeaderView = class HeaderView extends base.BaseView
 
         $.when(@rendering).done =>                        
             # @$el.find('.links').append Hb.header.links.render @auth.attributes
-
-
 
     _render: => 
         @setElement(Hb.header.holder.render())

@@ -1,4 +1,5 @@
 Backbone = require 'backbone'
+auth = require './auth'
 
 exports.AirportRouter = class AirportRouter extends Backbone.Router
     constructor: (@bus) ->
@@ -20,7 +21,7 @@ exports.AirportRouter = class AirportRouter extends Backbone.Router
         @bus.trigger 'show:issue', {owner:user, name:repo, number: num}
 
     home: =>
-        @navigate "/", {replace: true}
-        @bus.trigger 'show:login'
+        @navigate "/", {replace: true}        
+        @bus.trigger(if auth.isLoggedIn() then 'show:home' else 'show:login')
 
 

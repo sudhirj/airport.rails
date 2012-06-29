@@ -121,6 +121,8 @@ exports.IssueEventsView = class IssueEventsView extends base.BaseView
             @$el.empty()
             @issueEvents.forEach (event) =>
                 @$el.append new EventView(event).render().el
+
+class IssueCreationView extends base.BaseView
                
 
 exports.IssueListView = class IssueListView extends base.BaseView
@@ -132,4 +134,7 @@ exports.IssueListView = class IssueListView extends base.BaseView
             @$el.empty()
             @issueList.forEach (issue) =>
                 @$el.append new IssueView(issue).render().el
-        @showEmptyMessage @issueList, "No issues?"
+        @showEmptyMessage @issueList, Hb.issues.emptyMessage.render()
+        @$el.on 'click', '.new-issue', (e) =>            
+            
+            false

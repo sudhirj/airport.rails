@@ -1,6 +1,7 @@
 base = require './base'
 github = require './github'
 Hb = require './templates'
+_ = require 'underscore'
 
 exports.User = class User extends base.BaseModel
 
@@ -9,7 +10,8 @@ exports.CurrentUser = class CurrentUser extends User
         super {}
 
         triggerUserLoad = (login, type) =>
-            @bus.trigger "loaded:#{type.toLowerCase()}", login
+            # This trigger happens in the show:user event handler loop. Call it after the loop is finished.
+            _.defer => @bus.trigger "loaded:#{type.toLowerCase()}", login
 
         setUser = (user) =>
             @clear()

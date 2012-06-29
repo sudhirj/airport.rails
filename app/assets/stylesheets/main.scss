@@ -317,6 +317,11 @@ hr {
     font-weight: 500;
     @include grayout;    
     @include insetshadow();
+    .action {
+        text-decoration: underline;
+        border-bottom: thin solid rgba(0,0,0,0.4);
+        cursor: pointer;
+    }
 }
 
 .loginbox {

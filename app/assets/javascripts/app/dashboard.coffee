@@ -8,6 +8,14 @@ exports.MetroView = class MetroView extends base.BaseView
         @setElement Hb.content.holder.render()
         @metroman = new metroman.MetroMan(@$el)
         configs = 
+            'show:user': 
+                grid: { rows: 7, columns: 5, margin: 1.618 }
+                elements: [
+                    { view: @views.userInfo.$el, height: 1, width: 1, position: { x: 0, y: 0 } }
+                    { view: @views.activities.$el, height: 7, width: 1, position: { x: 1, y: 0 } }                                        
+                    { view: @views.repoList.$el, height: 6, width: 1, position: { x: 0, y: 1 } }                    
+                ]            
+
             'loaded:user': 
                 grid: { rows: 7, columns: 5, margin: 1.618 }
                 elements: [
@@ -53,8 +61,18 @@ exports.MetroView = class MetroView extends base.BaseView
                     { view: @views.login.$el, height: 3, width: 2, position: { x:4, y: 2 }}
                 ]
 
+            'show:home':
+                grid: { rows: 7, columns: 7, margin: 1.618 }
+                elements: [
+                    { view: @views.userInfo.$el, height: 5, width: 3, position: { x:1, y: 1 }}
+                    
+                ]
+
+
         _.each _.keys(configs), (key) =>
-            @bus.on key, => @bus.done 'global:render', => @metroman.load configs[key]
+            @bus.on key, => @bus.done 'global:render', => 
+                console.log 'Loading view configuration for', key
+                @metroman.load configs[key]
 
         super
 
