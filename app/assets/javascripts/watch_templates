@@ -1,4 +1,0 @@
-#!/bin/bash
-BASEDIR=$(dirname $0)
-
-watchmedo shell-command --patterns="*.html" --ignore-directories --recursive --command="liz ${BASEDIR}/templates/*.html -o ${BASEDIR}/app/templates.js" $BASEDIR/templates 

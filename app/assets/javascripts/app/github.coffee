@@ -8,14 +8,17 @@ request = (opts) ->
     opts.dataType ?= 'json'
     opts.headers ?= {}
     opts.data ?= {}
+    opts.data['cachebuster'] = Math.random()
 
     if auth.isLoggedIn()    
         opts.data.access_token = auth.getToken()
     
     opts.url = "#{GITHUB_API_ENPOINT}#{opts.url}"
     opts.headers['Accept'] ?= 'application/vnd.github.full+json, application/json'
+
     $.ajax opts
 
+exports.currentUser = -> request {url: "/user"}
 exports.user = (user) -> request {url: "/users/#{user}"}
 exports.repo = (user, repo) -> request {url: "/repos/#{user}/#{repo}"}
 exports.issue = (user, repo, number) -> request {url: "/repos/#{user}/#{repo}/issues/#{number}"}

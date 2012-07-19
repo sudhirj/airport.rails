@@ -18,6 +18,8 @@ group :development, :test do
   gem 'autotest-growl'
   gem 'spork-rails'
   gem 'foreman'
+  gem 'guard'
+  gem 'guard-shell'
 end
 
 group :assets do

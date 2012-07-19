@@ -46,7 +46,7 @@
 </script>
 
 <script name="issues.emptyMessage" >    
-    No Issues?<br/><span class="new-issue action">Create One!</span>
+    No Issues?
 </script>
 
 
@@ -107,8 +107,10 @@
 
 <script name="issues.event" >
     <div class="event">
-    <div class="issue-user">
-            <img class="avatar" src="{{actor.avatar_url}}"/>
+        <div class="issue-user">
+            <div class="avatar">
+                <img class="avatar" src="{{actor.avatar_url}}"/>
+            </div>
             <div class="info">
                 <a href="/{{actor.login}}">{{actor.login}}</a> {{{copy}}} <span class="age">{{timeOpened}}</span>            
             </div>        

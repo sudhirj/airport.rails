@@ -135,6 +135,3 @@ exports.IssueListView = class IssueListView extends base.BaseView
             @issueList.forEach (issue) =>
                 @$el.append new IssueView(issue).render().el
         @showEmptyMessage @issueList, Hb.issues.emptyMessage.render()
-        @$el.on 'click', '.new-issue', (e) =>            
-            
-            false

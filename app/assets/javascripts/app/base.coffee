@@ -73,11 +73,11 @@ exports.BaseView = class BaseView extends Backbone.View
         @rendering = deferred.Deferred()
         @spinner = new Spinner(
             lines: 40
-            length: 25
-            width: 3
-            radius: 50
+            length: 20
+            width: 2
+            radius: 30
             rotate: 10 * Math.random()
-            color: '#ccc'
+            color: '#ddd'
             opacity: 0.05
             speed: 2
             trail: 50            

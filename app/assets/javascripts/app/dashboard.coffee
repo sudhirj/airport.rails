@@ -11,16 +11,16 @@ exports.MetroView = class MetroView extends base.BaseView
             'show:user': 
                 grid: { rows: 7, columns: 5, margin: 1.618 }
                 elements: [
-                    { view: @views.userInfo.$el, height: 1, width: 1, position: { x: 0, y: 0 } }
-                    { view: @views.activities.$el, height: 7, width: 1, position: { x: 1, y: 0 } }                                        
+                    { view: @views.userInfo.$el, height: 1, width: 2, position: { x: 0, y: 0 } }
+                    { view: @views.activities.$el, height: 6, width: 1, position: { x: 1, y: 1 } }                                        
                     { view: @views.repoList.$el, height: 6, width: 1, position: { x: 0, y: 1 } }                    
                 ]            
 
             'loaded:user': 
                 grid: { rows: 7, columns: 5, margin: 1.618 }
                 elements: [
-                    { view: @views.userInfo.$el, height: 1, width: 1, position: { x: 0, y: 0 } }
-                    { view: @views.activities.$el, height: 7, width: 1, position: { x: 1, y: 0 } }                    
+                    { view: @views.userInfo.$el, height: 1, width: 2, position: { x: 0, y: 0 } }
+                    { view: @views.activities.$el, height: 6, width: 1, position: { x: 1, y: 1 } }                    
                     { view: @views.events.$el, height: 7, width: 1, position: { x: 2, y: 0 } }                    
                     { view: @views.repoList.$el, height: 6, width: 1, position: { x: 0, y: 1 } }                    
                 ]            
@@ -28,8 +28,8 @@ exports.MetroView = class MetroView extends base.BaseView
             'loaded:organization': 
                 grid: { rows: 7, columns: 5, margin: 1.618}
                 elements: [
-                    { view: @views.userInfo.$el, height: 1, width: 1, position: { x: 0, y: 0 } }                    
-                    { view: @views.activities.$el, height: 7, width: 1, position: { x: 1, y: 0 } }
+                    { view: @views.userInfo.$el, height: 1, width: 2, position: { x: 0, y: 0 } }                    
+                    { view: @views.activities.$el, height: 6, width: 1, position: { x: 1, y: 1 } }
                     { view: @views.members.$el, height: 7, width: 1, position: { x: 2, y: 0 } }                    
                     { view: @views.repoList.$el, height: 6, width: 1, position: { x: 0, y: 1 } }
                 ]
@@ -37,12 +37,12 @@ exports.MetroView = class MetroView extends base.BaseView
             'show:repo': 
                 grid: { rows: 7, columns: 5, margin: 1.618 }
                 elements: [
-                    { view: @views.userInfo.$el, height: 1, width: 1, position: { x: 0, y: 0 } }
-                    { view: @views.repoInfo.$el, height: 2, width: 1, position: { x: 0, y: 1 } }
-                    { view: @views.events.$el, height: 7, width: 1, position: {x: 1, y: 0 } }                    
+                    { view: @views.userInfo.$el, height: 1, width: 2, position: { x: 0, y: 0 } }
+                    { view: @views.repoInfo.$el, height: 2, width: 2, position: { x: 0, y: 1 } }
+                    { view: @views.chat.$el, height: 4, width: 1, position: {x: 1, y: 3 } }                    
                     { view: @views.repoList.$el, height: 4, width: 1, position: { x: 0, y: 3 } }
                     { view: @views.issues.$el, height: 7, width: 2, position: { x: 2, y: 0} }
-                    { view: @views.chat.$el, height: 7, width: 1, position: { x: 4, y: 0} }
+                    { view: @views.events.$el, height: 7, width: 1, position: { x: 4, y: 0} }
                 ]
             'show:issue':
                 grid: { rows: 7, columns: 7, margin: 1.618 }
@@ -62,10 +62,9 @@ exports.MetroView = class MetroView extends base.BaseView
                 ]
 
             'show:home':
-                grid: { rows: 7, columns: 7, margin: 1.618 }
+                grid: { rows: 7, columns: 5, margin: 1.618 }
                 elements: [
-                    { view: @views.userInfo.$el, height: 5, width: 3, position: { x:1, y: 1 }}
-                    
+                    { view: @views.userInfo.$el, height: 1, width: 2, position: { x: 3, y: 0 } }
                 ]
 
 

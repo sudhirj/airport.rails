@@ -1,5 +1,6 @@
 base = require './base'
 Hb = require './templates'
+auth = require './auth'
 
 exports.HeaderPathElementView = class HeaderPathElementView extends base.BaseView    
     constructor: (@text, @anchor) ->
@@ -43,9 +44,21 @@ exports.HeaderView = class HeaderView extends base.BaseView
         super
         @pathView = new HeaderPathView(@bus)
 
-        $.when(@rendering).done =>                        
-            # @$el.find('.links').append Hb.header.links.render @auth.attributes
+        $.when(@rendering).done =>            
+            @$el.find('.links').append Hb.header.links.render {
+                authenticated: auth.isLoggedIn()
+            }
 
     _render: => 
         @setElement(Hb.header.holder.render())
-        @$el.append @pathView.render().el        
+        @$el.append @pathView.render().el
+
+    logout: ->
+        auth.logout()
+        return false
+
+    events: {
+        "click .logout": -> @logout()
+    }
+
+

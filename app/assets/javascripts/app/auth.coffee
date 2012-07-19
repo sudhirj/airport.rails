@@ -10,3 +10,8 @@ exports.getToken = getToken = -> localStorage.getItem('token')
 exports.isLoggedIn = isLoggedIn = -> !!(getToken() and getLogin())
 exports.isCurrentUser = isCurrentUser = (login) -> isLoggedIn() and (login is getLogin())
 
+exports.logout = logout = -> 
+    localStorage.removeItem('token')
+    localStorage.removeItem('login')
+    window.location.reload()
+

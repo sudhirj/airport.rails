@@ -13,5 +13,11 @@
     "metroman": "*",
     "underscore.string":"*",
     "moment": "*"
+  },
+  "devDependencies": {
+     "liz": "*",
+     "browserify": "*",
+     "mocha":"*",
+     "coffee-script":"*"
   }
 }

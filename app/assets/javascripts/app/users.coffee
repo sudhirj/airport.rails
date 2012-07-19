@@ -20,11 +20,12 @@ exports.CurrentUser = class CurrentUser extends User
 
         loadUser = (user, announce) =>
             if user isnt @currentUser
-                @load github.user(user).done (userData) => 
+                @load github.user(user).done (userData) -> 
                     setUser userData
                     triggerUserLoad userData.login, userData.type if announce
             else triggerUserLoad @currentUser, @currentType if announce
         
+        @bus.on 'show:home', => @load github.currentUser().done (userData) -> setUser userData
         @bus.on 'show:user', (user) -> loadUser user, true
         @bus.on 'show:repo', (repo) -> loadUser repo.owner, false
 

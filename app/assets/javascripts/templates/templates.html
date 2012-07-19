@@ -6,25 +6,22 @@
 
 <script name="header.links" >
     
-    <a class="icon" href="/" title="Feedback">
+    <a class="icon" href="https://github.com/runway7/airport-feedback" title="Feedback">
         <i class="icon-phone"></i>
     </a>
     <a class="icon" href="/" title="Settings">
         <i class="icon-home"></i>
-    </a>
-    <a class="icon" href="/" title="Settings">
-        <i class="icon-inbox"></i>
-    </a>
-    {{^status}}
+    </a>    
+    {{^authenticated}}
     <a class="icon" href="/" title="Sign In">
         <i class="icon-signin"></i>
     </a>
-    {{/status}}
-    {{#status}}
-    <a class="icon" href="/" title="Logout">
+    {{/authenticated}}
+    {{#authenticated}}
+    <a class="icon logout" href="/" title="Logout">
         <i class="icon-signout"></i>
     </a>
-    {{/status}}
+    {{/authenticated}}
 
 </script>
 
@@ -126,7 +123,7 @@
         <p class="a">Aiport is a <strong>project management and collaboration</strong> tool that's tied in to GitHub. Easily see what others have been up to, organize your issues on a wall, chat with your team, post attachements and more.</p>
 
         <h3 class="q">How much does it cost?</h3>
-        <p class="a">Airport's pricing model is <s>blatantly copied from</s> inspired by GitHub: <strong>it's free for open source</strong> projects. For private repos you pay excatly what you're already paying GitHub to host them. If you choose to provide a private access token we'll peek at your GitHub plan and duplicate it here.</p>
+        <p class="a">Airport's pricing model is <s>blatantly copied from</s> inspired by GitHub: <strong>it's free for open source</strong> projects. For private repos you pay excatly what you're already paying GitHub to host them. If you choose to use it for private repos then we'll peek at your GitHub plan and duplicate it here.</p>
     </div>
 </script>
 
