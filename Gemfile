@@ -8,7 +8,7 @@ gem 'github_api'
 
 gem 'pg'
 gem 'oj'
-gem 'unicorn'
+gem 'thin'
 
 group :development, :test do
   gem 'rspec-rails'
