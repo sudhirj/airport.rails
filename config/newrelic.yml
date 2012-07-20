@@ -1,3 +1,4 @@
+
 # Here are the settings that are common to all environments
 common: &default_settings
   # ============================== LICENSE KEY ===============================
@@ -98,7 +99,7 @@ common: &default_settings
   browser_monitoring:
       # By default the agent automatically injects the monitoring JavaScript 
       # into web pages. Set this attribute to false to turn off this behavior.
-      auto_instrument: true
+      auto_instrument: false
 
   # Proxy settings for connecting to the service.
   #
@@ -242,10 +243,11 @@ test:
 # testing shows an average performance impact of < 5 ms per
 # transaction, you you can leave this on all the time without
 # incurring any user-visible performance degradation.
+<%unless ENV["NEW_RELIC_LICENSE_KEY"].nil? %>
 production:
   <<: *default_settings
   monitor_mode: true
-
+<%end%>
 # Many applications have a staging environment which behaves
 # identically to production.  Support for that environment is provided
 # here.  By default, the staging environment has the agent turned on.
