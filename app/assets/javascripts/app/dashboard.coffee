@@ -64,7 +64,8 @@ exports.MetroView = class MetroView extends base.BaseView
             'show:home':
                 grid: { rows: 7, columns: 5, margin: 1.618 }
                 elements: [
-                    { view: @views.userInfo.$el, height: 1, width: 2, position: { x: 3, y: 0 } }
+                    { view: @views.userInfo.$el, height: 1, width: 2, position: { x: 0, y: 0 } }
+                    { view: @views.blank.$el, height: 4, width: 3, position: { x: 1, y: 2 } }
                 ]
 
 

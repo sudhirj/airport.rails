@@ -107,12 +107,10 @@
 
 <script name="issues.event" >
     <div class="event">
-        <div class="issue-user">
-            <div class="avatar">
-                <img class="avatar" src="{{actor.avatar_url}}"/>
-            </div>
+        <div class="issue-user">            
+            <img class="avatar" src="{{actor.avatar_url}}"/>            
             <div class="info">
-                <a href="/{{actor.login}}">{{actor.login}}</a> {{{copy}}} <span class="age">{{timeOpened}}</span>            
+                <span><a href="/{{actor.login}}">{{actor.login}}</a> {{{copy}}} <span class="age">{{timeOpened}}</span></span>
             </div>        
         </div>        
     </div>    

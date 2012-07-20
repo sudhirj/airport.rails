@@ -62,6 +62,8 @@ chatView = new chat.ChatView bus
 loginView = new login.LoginView 
 loginInfoView = new login.LoginInfoView
 
+intentionalBlankView = new base.PlaceHolderView "This space intentionally left blank."
+
 metroView = new dashboard.MetroView bus, {        
     userInfo: userInfoView
     repoInfo: repoInfoView
@@ -77,6 +79,7 @@ metroView = new dashboard.MetroView bus, {
     issueComments: issueCommentsView
     issueEvents: issueEventsView
     chat: chatView
+    blank: intentionalBlankView
 }
 
 airportView = new base.AirportView(headerView, metroView)

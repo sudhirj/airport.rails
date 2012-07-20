@@ -101,7 +101,12 @@ exports.BaseView = class BaseView extends Backbone.View
         model.on 'load:finished', => @spinner.stop()
 
     showEmptyMessage: (model, message) ->
-        model.on 'data:empty data:unavailable', => @$el.empty().append Hb.empty.render message: message        
+        model.on 'data:empty data:unavailable', => @$el.empty().append Hb.empty.render message: message       
+
+exports.PlaceHolderView = class PlaceHolderView extends BaseView
+    constructor: (@message) ->
+        @setElement Hb.empty.render message: @message
+
 
 exports.Bus = class Bus        
     promises = {}

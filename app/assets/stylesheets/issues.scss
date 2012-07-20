@@ -181,16 +181,24 @@
                 img {
                     vertical-align: text-top;    
                 }                
-            }
-            .info {
+            }            
+            .info {                
+                &:first-line{
+                    line-height: 1;                    
+                }
                 margin-left: 2.235rem;
-                line-height: 1.381;               
+                line-height: 1.381;
                 .commit {
                     font-family: $codeFont;
                     font-size: 0.9rem;                    
                 }
                 a {
                     font-weight: 500;
+                    display: inline-block;
+                    margin:0;
+                    padding: 0;
+                    line-height: 1;
+                    padding-bottom: 0.235em;
                 }
                 .age {                    
                     margin-top: 0;
