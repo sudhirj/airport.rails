@@ -9,6 +9,7 @@ gem 'github_api'
 gem 'pg'
 gem 'oj'
 gem 'thin'
+gem 'newrelic_rpm'
 
 group :development, :test do
   gem 'rspec-rails'

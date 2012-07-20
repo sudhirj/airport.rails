@@ -96,6 +96,7 @@ GEM
     mime-types (1.19)
     multi_json (1.3.6)
     multipart-post (1.1.5)
+    newrelic_rpm (3.4.0.1)
     nokogiri (1.5.5)
     oauth2 (0.8.0)
       faraday (~> 0.8)
@@ -195,6 +196,7 @@ DEPENDENCIES
   guard
   guard-shell
   jbuilder
+  newrelic_rpm
   oj
   pg
   pry
