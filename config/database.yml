@@ -30,8 +30,8 @@ test:
   adapter: postgresql
   database: airport_test  
   host: localhost
-  username: jenkins
-  password: jenkins
+  username: airport
+  password: airport
   encoding: unicode
   port: 5432
 <%end%>
