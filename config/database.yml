@@ -31,6 +31,7 @@ test:
   database: airport_test  
   host: localhost
   username: jenkins
+  password: jenkins
   encoding: unicode
   port: 5432
 <%end%>
