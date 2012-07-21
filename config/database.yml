@@ -27,12 +27,10 @@ test:
   port: 5432
 <%else%>
 test:
-  adapter:    postgresql
-  encoding:   unicode
-  pool:   5
-  database:   d61fmpru2ahli3
-  username:   qxmmdvzomtoddz
-  password:   CAsbwavJ1chVNFFX-Q02TJmLL4
-  host:   ec2-23-21-89-241.compute-1.amazonaws.com
-  port:   5432
+  adapter: postgresql
+  database: airport_test  
+  host: localhost
+  username: jenkins
+  encoding: unicode
+  port: 5432
 <%end%>
