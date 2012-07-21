@@ -17,7 +17,7 @@ development:
   encoding: unicode
   port: 5432
   
-
+<%if ENV["CLAPTRAP"].nil? %>
 test:
   adapter: postgresql
   database: airport_test  
@@ -25,10 +25,14 @@ test:
   username: sudhirjonathan
   encoding: unicode
   port: 5432
-
-
-production:
-  adapter: sqlite3
-  database: db/production.sqlite3
-  pool: 5
-  timeout: 5000
+<%else%>
+test:
+  adapter:    postgresql
+  encoding:   unicode
+  pool:   5
+  database:   d61fmpru2ahli3
+  username:   qxmmdvzomtoddz
+  password:   CAsbwavJ1chVNFFX-Q02TJmLL4
+  host:   ec2-23-21-89-241.compute-1.amazonaws.com
+  port:   5432
+<%end%>

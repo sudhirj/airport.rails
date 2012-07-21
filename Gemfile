@@ -13,7 +13,6 @@ gem 'newrelic_rpm'
 
 group :development, :test do
   gem 'rspec-rails'
-  gem 'sqlite3'
   gem 'pry'
   gem 'autotest-rails'
   gem 'autotest-growl'
